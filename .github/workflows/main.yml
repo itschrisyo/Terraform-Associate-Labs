@@ -1,0 +1,88 @@
+# Action definition for the GitHub Accurics Action
+name: 'Accurics GitHub Action'
+author: 'accurics'
+description: 'The Accurics GitHub Action scans IaC (Infrastructure as Code) to help identify vulnerabilities prior to cloud deployment.'
+branding:
+  color: blue
+  icon: shield
+inputs:
+  debug-mode:
+    required: false
+    default: false
+  terraform-version:
+    description: 'The Terraform version used to process the files in this repository (ex: 0.12.26). (default=latest)'
+    required: false
+    default: 'latest'
+  directories:
+    description: 'A list of directories to scan within this repository separated by a space. (default=current directory)'
+    required: false
+    default: '.'
+  plan-args:
+    description: 'Terraform plan arguments'
+    required: true
+    default: ''
+  env-id:
+    description: 'Environment ID for Accurics to scan'
+    required: true
+    default: ''
+  app-id:
+    description: 'Accurics CLI Application Token ID'
+    required: true
+    default: ''
+  repo:
+    description: 'Repository Location'
+    required: false
+    default: '__empty__'
+  url:
+    description: 'Accurics Application URL'
+    required: false
+    default: 'https://app.accurics.com'
+  fail-on-violations:
+    description: 'Allows Accurics to fail the build when violations are found (default=true)'
+    required: false
+    default: true
+  fail-on-all-errors:
+    description: 'Allows Accurics to fail the build when any errors are encountered (default=true)'
+    required: false
+    default: true
+outputs:
+  env-name:
+    description: 'Environment Name'
+  repo:
+    description: 'Repository Location'
+  num-violations:
+    description: 'Number of Violations'
+  num-resources:
+    description: 'Number of Resources'
+  high:
+    description: 'Number of High-Severity Violations'
+  medium:
+    description: 'Number of Medium-Severity Violations'
+  low:
+    description: 'Number of Low-Severity Violations'
+  native:
+    description: 'Number of Violations for Native Resources'
+  inherited:
+    description: 'Number of Violations Inherited from Other Resources'
+  drift:
+    description: 'Total Number of Configuration drifts Found'
+  iacdrift:
+    description: 'Number of IAC-to-Cloud Configuration drifts Found'
+  clouddrift:
+    description: 'Number of Cloud-to-Cloud Configuration drifts Found'
+  has-errors:
+    description: 'Errors were reported'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.debug-mode }}
+    - ${{ inputs.terraform-version }}
+    - ${{ inputs.directories }}
+    - ${{ inputs.plan-args }}
+    - ${{ inputs.env-id }}
+    - ${{ inputs.app-id }}
+    - ${{ inputs.repo }}
+    - ${{ inputs.url }}
+    - ${{ inputs.fail-on-violations }}
+    - ${{ inputs.fail-on-all-errors }}

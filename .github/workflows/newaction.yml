@@ -1,0 +1,38 @@
+steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Accurics
+        uses: accurics/accurics-action@v1.3.1
+        id: accurics
+        env:
+          # Required by Terraform
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        with:
+          # Required by Accurics
+          app-id: ${{ secrets.ACCURICS_APP_ID }}
+          env-id: ${{ secrets.ACCURICS_ENV_ID }}
+          repo: "https://bitbucket.org/myrepo/reponame.git"
+          # Optional args
+          plan-args: '-var myvar1=val1 -var myvar2=val2'
+          fail-on-violations: false
+      - name: Display statistics
+        run: '
+            echo ""
+            echo "Environment Name           : ${{ steps.accurics.outputs.env-name }}";
+            echo "Repository                 : ${{ steps.accurics.outputs.repo }}";
+            echo "Violation Count            : ${{ steps.accurics.outputs.num-violations }}";
+            echo "Resource Count             : ${{ steps.accurics.outputs.num-resources }}";
+            echo ""
+            echo "Native Resources           : ${{ steps.accurics.outputs.native }}";
+            echo "Inherited Resources        : ${{ steps.accurics.outputs.inherited }}";
+            echo ""
+            echo "High-Severity Violations   : ${{ steps.accurics.outputs.high }}";
+            echo "Medium-Severity Violations : ${{ steps.accurics.outputs.medium }}";
+            echo "Low-Severity Violations    : ${{ steps.accurics.outputs.low }}";
+            echo ""
+            echo "Drift                      : ${{ steps.accurics.outputs.drift }}";
+            echo "IaC Drift                  : ${{ steps.accurics.outputs.iacdrift }}";
+            echo "Cloud Drift                : ${{ steps.accurics.outputs.clouddrift }}";
+            echo ""
+          '

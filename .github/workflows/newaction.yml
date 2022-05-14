@@ -1,5 +1,10 @@
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+  
 steps:
-      - on: push
       - name: Checkout
         uses: actions/checkout@v2
       - name: Accurics

@@ -4,6 +4,12 @@ on:
     - main
   pull_request:
   
+  jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: production
+  
 steps:
       - name: Checkout
         uses: actions/checkout@v2

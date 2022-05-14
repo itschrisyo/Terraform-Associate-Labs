@@ -1,6 +1,5 @@
-on: push
-
 steps:
+      - on: push
       - name: Checkout
         uses: actions/checkout@v2
       - name: Accurics
